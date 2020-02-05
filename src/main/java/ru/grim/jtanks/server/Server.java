@@ -1,8 +1,8 @@
 package ru.grim.jtanks.server;
 
-public interface Server {
+public interface Server extends Runnable {
 	
-	void start(int port);
+//	void start(int port);
 	
 	void stop();
 
