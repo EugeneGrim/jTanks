@@ -22,7 +22,7 @@ public class NetworkServer implements Server {
 	public void run() {
 		start(5555);
 	}
-
+	
 	private void start(int port) {
 		openServerSocket(port);
 		
@@ -33,14 +33,16 @@ public class NetworkServer implements Server {
         closeServerSocket();
 	}
 	
+	@Override
+	public void stop() {
+		closeServerSocket();
+	}
+	
 	private void openServerSocket(int port) {
 		try {
 			serverSocket = new ServerSocket(port);
-			
-			System.out.println("Server socket created, command console reader for listen to server commands");
 		} catch (IOException e) {
 			//TODO write to log
-			System.out.println("ERROR creating server socket");
 			throw new StartServerException(e.getMessage());
 		}
 	}
@@ -61,18 +63,15 @@ public class NetworkServer implements Server {
 
 	private void closeServerSocket() {
 		executeIt.shutdown();
-		if (serverSocket != null && !serverSocket.isClosed()) {
-			try {
+		try {
+			if (serverSocket != null && !serverSocket.isClosed()) {
 				serverSocket.close();
-			} catch (IOException e) {
-				//TODO write to log
-				throw new StopServerException(e.getMessage());
 			}
+		} catch (IOException e) {
+			// TODO write to log
+			throw new StopServerException(e.getMessage());
+		} finally {
+			serverSocket = null;
 		}
-	}
-
-	@Override
-	public void stop() {
-		closeServerSocket();
 	}
 }

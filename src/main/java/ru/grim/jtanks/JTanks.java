@@ -23,7 +23,6 @@ public class JTanks extends Application {
 		URL xmlUrl = getClass().getResource("/mainScene.fxml");
 		loader.setLocation(xmlUrl);
 		Parent root = loader.load();
-
 		primaryStage.setScene(new Scene(root));
 	}
 

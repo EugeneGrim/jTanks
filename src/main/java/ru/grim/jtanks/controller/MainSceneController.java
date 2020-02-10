@@ -11,6 +11,7 @@ import javafx.scene.control.MenuItem;
 import ru.grim.jtanks.exception.handler.MainSceneExceptionHandler;
 import ru.grim.jtanks.exception.handler.StartServerExceptionHandler;
 import ru.grim.jtanks.exception.handler.StopServerExceptionHandler;
+import ru.grim.jtanks.server.Server;
 import ru.grim.jtanks.server.impl.NetworkServer;
 
 public class MainSceneController {
@@ -19,7 +20,7 @@ public class MainSceneController {
 	@FXML private MenuItem startServerMenuItem;
 	@FXML private MenuItem stopServerMenuItem;
 	
-	private NetworkServer server;
+	private Server server;
 	private Set<MainSceneExceptionHandler> exceptionHandlers;
 	
 	public MainSceneController() {
