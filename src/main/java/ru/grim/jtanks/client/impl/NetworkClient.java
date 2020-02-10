@@ -13,8 +13,8 @@ import ru.grim.jtanks.client.Client;
 public class NetworkClient implements Client {
 
 	@Override
-	public void connect(String server, String port) {
-		try (Socket socket = new Socket("localhost", 3345);
+	public void connect(String server, int port) {
+		try (Socket socket = new Socket(server, port);
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
 				DataInputStream ois = new DataInputStream(socket.getInputStream());) {

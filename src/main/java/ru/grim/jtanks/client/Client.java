@@ -2,7 +2,7 @@ package ru.grim.jtanks.client;
 
 public interface Client {
 	
-	void connect(String server, String port);
+	void connect(String server, int port);
 	
 	void disconnect();
 

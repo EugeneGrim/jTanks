@@ -8,7 +8,7 @@ public class StartServerExceptionHandler implements MainSceneExceptionHandler {
 	@Override
 	public void handleException(Throwable e, MainSceneController controller) {
 		if (e instanceof StartServerException) {
-			controller.setSceneControlsIfServerError();
+			controller.networkMenuController.setSceneControlsIfServerError();;
 		}
 	}
 
