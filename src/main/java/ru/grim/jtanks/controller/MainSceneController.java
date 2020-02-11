@@ -1,13 +1,13 @@
 package ru.grim.jtanks.controller;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.HashSet;
 import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import ru.grim.jtanks.client.Client;
 import ru.grim.jtanks.exception.handler.MainSceneExceptionHandler;
 import ru.grim.jtanks.exception.handler.StartServerExceptionHandler;
 import ru.grim.jtanks.exception.handler.StopServerExceptionHandler;
@@ -16,9 +16,9 @@ import ru.grim.jtanks.server.impl.NetworkServer;
 
 public class MainSceneController {
 	
-	public NetworkMenuController networkMenuController;
+	public NetworkServerController serverController;
+	public NetworkClientController clientController;
 	
-	private Server server;
 	private Set<MainSceneExceptionHandler> exceptionHandlers;
 	
 	@FXML private Label serverStatusLabel;
@@ -26,28 +26,28 @@ public class MainSceneController {
 	@FXML private MenuItem stopServerMenuItem;
 	
 	public MainSceneController() {
-		networkMenuController = new NetworkMenuController();
-		exceptionHandlers = getExceptionHandlers();
+		serverController = new NetworkServerController();
+		clientController = new NetworkClientController();
+		exceptionHandlers = Set.of(
+				new StartServerExceptionHandler(), 
+				new StopServerExceptionHandler());
 		Thread.setDefaultUncaughtExceptionHandler(getMainSceneExceptionHandler());
 	}
 	
 	public void startServerMenuItemClicked() {
-		networkMenuController.startServer();
+		serverController.startServer();
 	}
 	
 	public void stopServerMenuItemClicked() {
-		networkMenuController.stopServer();
+		serverController.stopServer();
+	}
+	
+	public void joinServerMenuItemClicked() {
+		clientController.joinServer();
 	}
 	
 	public void quitMenuItemClicked() {
 		Platform.exit();
-	}
-
-	private Set<MainSceneExceptionHandler> getExceptionHandlers() {
-		Set<MainSceneExceptionHandler> handlers = new HashSet<>();
-		handlers.add(new StartServerExceptionHandler());
-		handlers.add(new StopServerExceptionHandler());
-		return handlers;
 	}
 
 	private UncaughtExceptionHandler getMainSceneExceptionHandler() {
@@ -55,7 +55,9 @@ public class MainSceneController {
 				-> exceptionHandlers.forEach(handler -> handler.handleException(exception, MainSceneController.this));
 	}
 	
-	public class NetworkMenuController {
+	public class NetworkServerController {
+		
+		private Server server;
 		
 		public void startServer() {
 			Thread serverThread = createNewServerAsDaemon();
@@ -97,5 +99,15 @@ public class MainSceneController {
 			serverThread.setDaemon(true);
 			return serverThread;
 		}
+	}
+	
+	public class NetworkClientController {
+		
+		private Client client;
+		
+		public void joinServer() {
+			client.connect("localhost", 5555);
+		}
+		
 	}
 }
