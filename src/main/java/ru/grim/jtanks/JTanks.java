@@ -15,6 +15,8 @@ public class JTanks extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		loadMainScene(primaryStage);
 		primaryStage.setTitle("jTanks");
+		primaryStage.setMinWidth(640);
+		primaryStage.setMinHeight(480);
 		primaryStage.show();
 	}
 

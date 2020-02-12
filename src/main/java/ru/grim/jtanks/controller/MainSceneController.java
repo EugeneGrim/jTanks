@@ -1,113 +1,114 @@
 package ru.grim.jtanks.controller;
 
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import ru.grim.jtanks.client.Client;
-import ru.grim.jtanks.exception.handler.MainSceneExceptionHandler;
+import ru.grim.jtanks.exception.handler.ExceptionHandler;
 import ru.grim.jtanks.exception.handler.StartServerExceptionHandler;
 import ru.grim.jtanks.exception.handler.StopServerExceptionHandler;
-import ru.grim.jtanks.server.Server;
-import ru.grim.jtanks.server.impl.NetworkServer;
 
 public class MainSceneController {
 	
-	public NetworkServerController serverController;
-	public NetworkClientController clientController;
+	public final MainMenuController mainMenuController;
+	public final NetworkServerController serverController;
+	public final NetworkClientController clientController;
 	
-	private Set<MainSceneExceptionHandler> exceptionHandlers;
+	private final Set<ExceptionHandler> exceptionHandlers;
 	
 	@FXML private Label serverStatusLabel;
 	@FXML private MenuItem startServerMenuItem;
 	@FXML private MenuItem stopServerMenuItem;
+	@FXML private MenuItem joinServerMenuItem;
+	@FXML private MenuItem disconnectServerMenuItem;
 	
 	public MainSceneController() {
+		mainMenuController = new MainMenuController();
 		serverController = new NetworkServerController();
 		clientController = new NetworkClientController();
+		
 		exceptionHandlers = Set.of(
 				new StartServerExceptionHandler(), 
 				new StopServerExceptionHandler());
-		Thread.setDefaultUncaughtExceptionHandler(getMainSceneExceptionHandler());
+		
+		Thread.setDefaultUncaughtExceptionHandler((thread, exception) -> exceptionHandlers
+				.forEach(handler -> handler.handleException(exception, MainSceneController.this)));
 	}
 	
 	public void startServerMenuItemClicked() {
+		mainMenuController.setMenuItemsIfServerStarted(true);
 		serverController.startServer();
 	}
 	
 	public void stopServerMenuItemClicked() {
+		mainMenuController.setMenuItemsIfServerStarted(false);
 		serverController.stopServer();
 	}
 	
 	public void joinServerMenuItemClicked() {
+		mainMenuController.setMenuItemsIfClientConnected(true);
 		clientController.joinServer();
+	}
+	
+	public void disconnectFromServerMenuItemClicked() {
+		mainMenuController.setMenuItemsIfClientConnected(false);
+		clientController.disconnect();
 	}
 	
 	public void quitMenuItemClicked() {
 		Platform.exit();
 	}
-
-	private UncaughtExceptionHandler getMainSceneExceptionHandler() {
-		return (thread, exception) 
-				-> exceptionHandlers.forEach(handler -> handler.handleException(exception, MainSceneController.this));
-	}
 	
-	public class NetworkServerController {
+	public class MainMenuController {
 		
-		private Server server;
-		
-		public void startServer() {
-			Thread serverThread = createNewServerAsDaemon();
-			serverThread.start();
-			setSceneControlsIfServerStarted();
+		public void setMenuItemsIfServerStarted(boolean serverStarted) {
+			if (serverStarted) {
+				Platform.runLater(() -> {
+					startServerMenuItem.setDisable(true);
+					stopServerMenuItem.setDisable(false);
+					joinServerMenuItem.setDisable(true);
+					disconnectServerMenuItem.setDisable(true);
+					serverStatusLabel.setText("Status: server is running");
+				});
+			} else {
+				Platform.runLater(() -> {
+					startServerMenuItem.setDisable(false);
+					stopServerMenuItem.setDisable(true);
+					joinServerMenuItem.setDisable(false);
+					disconnectServerMenuItem.setDisable(true);
+					serverStatusLabel.setText("Status: server is not running");
+				});
+			}
 		}
 		
-		public void stopServer() {
-			server.stop();
-		}
-		
-		public void setSceneControlsIfServerStarted() {
+		public void setMenuItemsIfError(String errorMessage) {
 			Platform.runLater(() -> {
-				serverStatusLabel.setText("Server status: running");
-				startServerMenuItem.setDisable(true);
-				stopServerMenuItem.setDisable(false);
-			});
-		}
-
-		public void setSceneControlsIfServerStoped() {
-			Platform.runLater(() -> {
-				serverStatusLabel.setText("Server status: is not running");
 				startServerMenuItem.setDisable(false);
 				stopServerMenuItem.setDisable(true);
+				joinServerMenuItem.setDisable(false);
+				disconnectServerMenuItem.setDisable(true);
+				serverStatusLabel.setText(errorMessage);
 			});
 		}
 		
-		public void setSceneControlsIfServerError() {
-			Platform.runLater(() -> {
-				serverStatusLabel.setText("Server status: ERROR starting server");
-				startServerMenuItem.setDisable(false);
-				stopServerMenuItem.setDisable(true);
-			});
+		public void setMenuItemsIfClientConnected(boolean clientConnected) {
+			if (clientConnected) {
+				Platform.runLater(() -> {
+					startServerMenuItem.setDisable(true);
+					stopServerMenuItem.setDisable(true);
+					joinServerMenuItem.setDisable(true);
+					disconnectServerMenuItem.setDisable(false);
+				});
+			} else {
+				Platform.runLater(() -> {
+					startServerMenuItem.setDisable(false);
+					stopServerMenuItem.setDisable(true);
+					joinServerMenuItem.setDisable(false);
+					disconnectServerMenuItem.setDisable(true);
+				});
+			}
 		}
-		
-		private Thread createNewServerAsDaemon() {
-			server = new NetworkServer();
-			Thread serverThread = new Thread(server);
-			serverThread.setDaemon(true);
-			return serverThread;
-		}
-	}
-	
-	public class NetworkClientController {
-		
-		private Client client;
-		
-		public void joinServer() {
-			client.connect("localhost", 5555);
-		}
-		
 	}
 }

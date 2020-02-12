@@ -50,7 +50,7 @@ public class NetworkServer implements Server {
 			System.out.print("Connection accepted.");
 		} catch (SocketException e) {
 			//TODO write to log
-			throw new StopServerException(e.getMessage());
+			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			//TODO write to log
 			throw new ClientAcceptServerException(e.getMessage());
@@ -58,7 +58,7 @@ public class NetworkServer implements Server {
 	}
 
 	private void closeServerSocket() {
-		executeIt.shutdown();
+		executeIt.shutdownNow();
 		try {
 			if (serverSocket != null && !serverSocket.isClosed()) {
 				serverSocket.close();
