@@ -20,7 +20,7 @@ public class NetworkServer implements Server {
 
 	@Override
 	public void run() {
-		openServerSocket(5555);
+		openServerSocket(555);
 		
         while (!serverSocket.isClosed()) {
             acceptClientConnection();

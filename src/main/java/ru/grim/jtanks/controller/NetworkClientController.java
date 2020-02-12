@@ -9,7 +9,7 @@ public class NetworkClientController {
 	
 	public void joinServer() {
 		client = new NetworkClient();
-//		client.connect("localhost", 5555);
+		client.connect("localhost", 5555);
 	}
 	
 	public void disconnect() {

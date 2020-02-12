@@ -58,7 +58,7 @@
             <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
          </padding>
          <children>
-            <Label fx:id="serverStatusLabel" alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" text="Status: server is not running" />
+            <Label fx:id="statusLabel" alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" text="Status: disconnected" />
          </children>
       </HBox>
   </children>
