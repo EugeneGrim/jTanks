@@ -1,21 +1,31 @@
 package ru.grim.jtanks.client.impl;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
 import ru.grim.jtanks.client.Client;
 import ru.grim.jtanks.exception.ConnectToServerException;
 
-public class NetworkClient implements Client {
+public class NetworkClient extends Thread implements Client {
+	
+	private final String server;
+	private final int port;
+	
+	
+	public NetworkClient(String server, int port) {
+		this.server = server;
+		this.port = port;
+	}
 
 	@Override
-	public void connect(String server, int port) {
-		throw new ConnectToServerException();
+	public void run() {
+		connectToServer(server, port);
+	}
+
+	@Override
+	public void connect() {
+		this.start();
+	}
+	
+	private void connectToServer(String server, int port) {
+		throw new ConnectToServerException("Error connecting to remote server");
 //		try (Socket socket = new Socket(server, port);
 //				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //				DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
@@ -93,7 +103,5 @@ public class NetworkClient implements Client {
 	@Override
 	public void disconnect() {
 		// TODO Auto-generated method stub
-
 	}
-
 }

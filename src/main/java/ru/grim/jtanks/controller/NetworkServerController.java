@@ -8,18 +8,12 @@ public class NetworkServerController {
 	private Server server;
 
 	public void startServer() {
-		createNewServerAsDaemon().start();
+		server = new NetworkServer();
+		server.startServer();
 	}
 	
 	public void stopServer() {
-		server.stop();
+		server.stopServer();
 		server = null;
-	}
-	
-	private Thread createNewServerAsDaemon() {
-		server = new NetworkServer();
-		Thread serverThread = new Thread(server);
-		serverThread.setDaemon(true);
-		return serverThread;
-	}
+	}	
 }

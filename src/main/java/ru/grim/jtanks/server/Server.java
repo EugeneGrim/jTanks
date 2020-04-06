@@ -1,7 +1,9 @@
 package ru.grim.jtanks.server;
 
-public interface Server extends Runnable {
+public interface Server {
 	
-	void stop();
+	void startServer();
+	
+	void stopServer();
 
 }

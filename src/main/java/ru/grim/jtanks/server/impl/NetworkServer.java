@@ -12,15 +12,19 @@ import ru.grim.jtanks.exception.StartServerException;
 import ru.grim.jtanks.exception.StopServerException;
 import ru.grim.jtanks.server.Server;
 
-public class NetworkServer implements Server {
+public class NetworkServer extends Thread implements Server {
 	
 	static ExecutorService executeIt = Executors.newFixedThreadPool(2);
 	
 	private ServerSocket serverSocket;
+	
+	public NetworkServer() {
+		this.setDaemon(true);
+	}
 
 	@Override
 	public void run() {
-		openServerSocket(555);
+		openServerSocket(5555);
 		
         while (!serverSocket.isClosed()) {
             acceptClientConnection();
@@ -30,7 +34,12 @@ public class NetworkServer implements Server {
 	}
 	
 	@Override
-	public void stop() {
+	public void startServer() {
+		this.start();
+	}
+	
+	@Override
+	public void stopServer() {
 		closeServerSocket();
 	}
 	
