@@ -10,8 +10,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class JTanks extends Application {
-	//hello
-	//world
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
