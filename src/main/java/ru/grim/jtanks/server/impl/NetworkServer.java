@@ -26,11 +26,9 @@ public class NetworkServer extends Thread implements Server {
 	public void run() {
 		openServerSocket(5555);
 		
-        while (!serverSocket.isClosed()) {
+        while (serverSocket != null && !serverSocket.isClosed()) {
             acceptClientConnection();
         }
-        
-        closeServerSocket();
 	}
 	
 	@Override

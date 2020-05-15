@@ -66,46 +66,46 @@ public class MainSceneController {
 	}
 	
 	public void setStatus(String statusMessage) {
-		Platform.runLater(() -> {
+//		Platform.runLater(() -> {
 			statusLabel.setText(statusMessage);
-		});
+//		});
 	}
 	
 	public class MainMenuController {
 		
 		public void setMenuItemsIfServerStarted(boolean serverStarted) {
 			if (serverStarted) {
-				Platform.runLater(() -> {
+//				Platform.runLater(() -> {
 					startServerMenuItem.setDisable(true);
 					stopServerMenuItem.setDisable(false);
 					joinServerMenuItem.setDisable(true);
 					disconnectServerMenuItem.setDisable(true);
-				});
+//				});
 			} else {
-				Platform.runLater(() -> {
+//				Platform.runLater(() -> {
 					startServerMenuItem.setDisable(false);
 					stopServerMenuItem.setDisable(true);
 					joinServerMenuItem.setDisable(false);
 					disconnectServerMenuItem.setDisable(true);
-				});
+//				});
 			}
 		}
 		
 		public void setMenuItemsIfClientConnected(boolean clientConnected) {
 			if (clientConnected) {
-				Platform.runLater(() -> {
+//				Platform.runLater(() -> {
 					startServerMenuItem.setDisable(true);
 					stopServerMenuItem.setDisable(true);
 					joinServerMenuItem.setDisable(true);
 					disconnectServerMenuItem.setDisable(false);
-				});
+//				});
 			} else {
-				Platform.runLater(() -> {
+//				Platform.runLater(() -> {
 					startServerMenuItem.setDisable(false);
 					stopServerMenuItem.setDisable(true);
 					joinServerMenuItem.setDisable(false);
 					disconnectServerMenuItem.setDisable(true);
-				});
+//				});
 			}
 		}
 	}

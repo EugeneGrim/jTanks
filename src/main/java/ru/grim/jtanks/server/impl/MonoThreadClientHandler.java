@@ -7,11 +7,12 @@ import java.net.Socket;
 
 class MonoThreadClientHandler implements Runnable {
 
-	private static Socket clientDialog;
+//	private static Socket clientDialog;
+	private Socket clientDialog;
 
 	public MonoThreadClientHandler(Socket client) {
 		
-		MonoThreadClientHandler.clientDialog = client;
+		this.clientDialog = client;
 	}
 
 	@Override
